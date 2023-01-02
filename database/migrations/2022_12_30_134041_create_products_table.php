@@ -17,16 +17,16 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->string('title', 150);
             $table->string('keywords')->nullable();
-            $table->string('content')->nullable();
+            $table->longText('content')->nullable();
             $table->string('image', 75)->nullable();
             $table->integer('category_id')->nullable();
             $table->integer('user_id')->nullable();
-            $table->float('price')->nullable();
-            $table->integer('quantity')->nullable()->default(1);
+            $table->string('price')->nullable();
+            $table->string('quantity')->nullable()->default(1);
             $table->decimal('sale_price')->nullable();
             $table->text('detail')->nullable();
             $table->string('slug', 100)->nullable();
-            $table->string('status', 5)->nullable()->default('False');
+            $table->string('status', 5)->nullable()->default(0);
             $table->timestamps();
         });
     }

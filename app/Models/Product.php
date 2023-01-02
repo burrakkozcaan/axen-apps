@@ -10,16 +10,24 @@ class Product extends Model
     use HasFactory;
     protected $guarded = [];
 
-    protected $attributes = [
-        'status' => 'False',
-        'quantity' => 1,
+    protected $fillable = [
+        'title',
+        'slug',
+        'content',
+        'image',
+        'quantity',
+        'price',
+        'status',
+        'category_id',
+
     ];
+
 
     protected $table = 'products';
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class,);
     }
 
 }

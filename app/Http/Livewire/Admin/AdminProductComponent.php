@@ -2,37 +2,38 @@
 
 namespace App\Http\Livewire\Admin;
 
+use Livewire\Component;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 
 class AdminProductComponent extends Component
 {
-
     use WithPagination;
+    use WithFileUploads;
     public $modalFormVisible = false;
     public $modalConfirmDeleteVisible = false;
-    public $title;
+    public $modelId;
     public $slug;
+    public $title;
+    public $content;
+    public $image;
+
     public $price;
     public $quantity;
-    public $sale_price;
+
     public $detail;
-    public $image;
-    public $category_id;
-    public $user_id;
     public $status;
-    public $modelId;
-    public $content;
-    public $keywords;
 
-
-    use WithFileUploads;
-
+    public $newImage;
+    public $oldImage;
+    public $Product;
+    public $category_id;
     /**
      * The validation rules
      *
@@ -41,30 +42,15 @@ class AdminProductComponent extends Component
     public function rules()
     {
         return [
-            'title' => 'required | unique:products',
+            'title' => 'required',
             'slug' => ['required', Rule::unique('products', 'slug')->ignore($this->modelId)],
-            'price' => 'required | numeric',
-            'quantity' => 'required | numeric',
-            'sale_price' => 'required | numeric',
-            'detail' => 'required',
-            'image' => 'required | image | mimes:png,jpg,jpeg | max:1048',
-            'user_id' => 'required',
+            'content' => 'required',
+            'image' => 'required',
+            'quantity' => 'required',
+            'price' => 'required',
             'status' => 'required',
-            'content' => 'required | string',
-            'keywords' => 'required',
             'category_id' => 'required',
-
         ];
-    }
-
-    public function upload()
-    {
-
-        $this->validate([
-            'image' => 'required|image',
-        ]);
-        $this->image->store('images', 'public');
-
     }
 
     /**
@@ -82,33 +68,55 @@ class AdminProductComponent extends Component
 
     public function create()
     {
-        $this->validate();
-       Product::create($this->modelData());
-        $this->resetValidation();
+        $image = $this->newImage->store('public/products');
+        $this->validate([
+            'newImage' => 'image|mimes:jpg,jpeg,png,svg,gif|max:2048', // 1MB Max
+            'title' => 'required',
+            'slug' => ['required', Rule::unique('products', 'slug')->ignore($this->modelId)],
+            'content' => 'required',
+            'quantity' => 'required',
+            'price' => 'required',
+            'status' => 'required',
+            'category_id' => 'required',
+
+
+
+        ]);
+        Product::create([
+            'image' => $image,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'content' => $this->content,
+            'quantity' => $this->quantity,
+            'price' => $this->price,
+            'status' => $this->status,
+            'category_id' => $this->category_id,
+
+
+
+        ]);
         $this->reset();
-        $this->modalFormVisible = true;
+//        Product::create($this->modelId)->update($this->modelData());
+
+        $this->modalFormVisible = false;
+        $this->resetFields();
         $this->dispatchBrowserEvent('event-notification', [
             'eventName' => 'New Page',
             'eventMessage' => 'Another page has been created!',
         ]);
-
-
 
     }
     public function resetFields()
     {
         $this->title = null;
         $this->slug = null;
+        $this->content = null;
         $this->price = null;
         $this->quantity = null;
-        $this->sale_price = null;
-        $this->detail = null;
-        $this->image = null;
-        $this->user_id = null;
         $this->status = null;
-        $this->content = null;
-        $this->keywords = null;
         $this->category_id = null;
+
+
 
     }
 
@@ -131,18 +139,61 @@ class AdminProductComponent extends Component
      */
     public function update()
     {
+        $this->validate([
+            'title' => 'required',
+            'slug' => ['required', Rule::unique('products', 'slug')->ignore($this->modelId)],
+            'content' => 'required',
+            'quantity' => 'required',
+            'price' => 'required',
+            'status' => 'required',
+            'category_id' => 'required',
 
-//        $this->validate();
-//        Product::find($this->modelData());
+        ]);
+        $image = $this->Product->image;
+        if($this->newImage){
+            $image = $this->newImage->store('public/products');
+        }
+
+       $this->Product->update([
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'content' => $this->content,
+            'image' => $image,
+            'quantity' => $this->quantity,
+            'price' => $this->price,
+           'status' => $this->status,
+              'category_id' => $this->category_id,
+
+
+        ]);
+
+        $this->reset();
+        $this->modalFormVisible = false;
+
+
+//        Product::find($this->modelId)->update($this->modelData());
 //        $this->modalFormVisible = false;
 //        $this->reset();
-//        $this->dispatchBrowserEvent('event-notification', [
-//            'eventName' => 'Page Updated',
-//            'eventMessage' => 'The page has been updated!',
-//        ]);
-
-        dd($this->modelData());
+        $this->dispatchBrowserEvent('event-notification', [
+            'eventName' => 'Page Updated',
+            'eventMessage' => 'The page has been updated!',
+        ]);
     }
+
+    public function showeditProductModel(){
+        $this->Product = Product::find($this->modelId);
+        $this->title = $this->Product->title;
+        $this->slug = $this->Product->slug;
+        $this->content = $this->Product->content;
+        $this->oldImage = $this->Product->image;
+        $this->quantity = $this->Product->quantity;
+        $this->price = $this->Product->price;
+        $this->status = $this->Product->status;
+        $this->category_id = $this->Product->category_id;
+
+
+    }
+
 
     /**
      * The delete function.
@@ -151,7 +202,11 @@ class AdminProductComponent extends Component
      */
     public function delete()
     {
-        Product::destroy($this->modelId);
+        $Product = Product::Find($this->modelId);
+        Storage::delete($Product->image);
+        $Product->delete();
+        $this->reset();
+
         $this->modalConfirmDeleteVisible = false;
         $this->resetPage();
         $this->dispatchBrowserEvent('event-notification', [
@@ -209,6 +264,7 @@ class AdminProductComponent extends Component
         $this->modelId = $id;
         $this->modalFormVisible = true;
         $this->loadModel();
+        $this->showeditProductModel();
     }
 
     /**
@@ -220,6 +276,7 @@ class AdminProductComponent extends Component
     public function deleteShowModal($id)
     {
         $this->modelId = $id;
+
         $this->modalConfirmDeleteVisible = true;
     }
 
@@ -234,15 +291,11 @@ class AdminProductComponent extends Component
         $products = Product::find($this->modelId);
         $this->title = $products->title;
         $this->slug = $products->slug;
-        $this->price = $products->price;
-        $this->quantity = $products->quantity;
-        $this->sale_price = $products->sale_price;
-        $this->detail = $products->detail;
-        $this->image = $products->image;
-        $this->user_id = $products->user_id;
-        $this->status = $products->status;
         $this->content = $products->content;
-        $this->keywords = $products->keywords;
+        $this->oldImage = $products->image;
+        $this->quantity = $products->quantity;
+        $this->price = $products->price;
+        $this->status = $products->status;
         $this->category_id = $products->category_id;
 
 
@@ -259,18 +312,11 @@ class AdminProductComponent extends Component
         return [
             'title' => $this->title,
             'slug' => $this->slug,
-            'price' => $this->price,
-            'quantity' => $this->quantity,
-            'sale_price' => $this->sale_price,
-            'detail' => $this->detail,
-            'image' => $this->image,
-            'user_id' => $this->user_id,
-            'status' => $this->status,
             'content' => $this->content,
-            'keywords' => $this->keywords,
+            'quantity' => $this->quantity,
+             'price' => $this->price,
+            'status' => $this->status,
             'category_id' => $this->category_id,
-
-
         ];
     }
 
@@ -290,9 +336,14 @@ class AdminProductComponent extends Component
 
     public function render()
     {
+
         $products =  [
             'products' => $this->read(),
+
         ];
-        return view('livewire.admin.admin-product-component', $products)->layout('layouts.admin');
+         $categories = Category::all();
+
+
+        return view('livewire.admin.admin-product-component', $products, ['categories' => $categories] )->layout('layouts.admin');
     }
 }

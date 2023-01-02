@@ -21,10 +21,10 @@
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Quantıtıy</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Link</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Content</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">slug</th>
-                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">content</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">img</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
 
                         </tr>
@@ -36,32 +36,16 @@
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
                                         {{ $Product->title }}
                                     </td>
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
+                                        {{ $Product->category->title }}
+                                    </td>
 
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
                                         {{ $Product->quantity }}
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                        {{ $Product->Price }}
+                                        {{ $Product->price }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                        {{ $Product->category_id }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                        <img src="{{ Storage::url("/storage/app/{$Product->image}") }}" alt="{{ $Product->image }}" width="60" />
-                                    </td>
-
-                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                        @if ($Product->status == 1)
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                              Active
-                                            </span>
-                                        @else
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                              Inactive
-                                            </span>
-                                        @endif
-                                    </td>
-
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
                                         <a
                                             class="text-indigo-600 hover:text-indigo-900"
@@ -72,6 +56,20 @@
                                         </a>
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">{!! \Illuminate\Support\Str::limit($Product->content, 50, '...') !!}</td>
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
+                                        @if ($Product->status == 0)
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                              Active
+                                            </span>
+                                        @else
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                              Inactive
+                                            </span>
+                                        @endif
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
+                                        <img class="w-8 h-8 rounded-full" src="{{ Storage::url($Product->image) }}" />
+                                    </td>
+
                                     <td class="px-6 py-4 text-right text-sm">
                                         <x-jet-button wire:click="updateShowModal({{ $Product->id }})">
                                             {{ __('Update') }}
@@ -103,8 +101,9 @@
     {{-- Modal Form --}}
     <x-jet-dialog-modal wire:model="modalFormVisible">
         <x-slot name="title">
-            {{ __('Save Page') }} {{ $modelId }}
+            {{ __('Save Page') }}
         </x-slot>
+
 
         <form wire:submit.prevent="create">
             <x-slot name="content">
@@ -114,51 +113,23 @@
                     @error('title') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-4">
-                    <x-jet-label for="title" value="{{ __('Keywords') }}" />
-                    <x-jet-input id="keywords" class="block mt-1 w-full" type="text" wire:model.defer="keywords" />
-                    @error('keywords') <span class="error">{{ $message }}</span> @enderror
+                    <x-jet-label for="quantity" value="{{ __('Quantity') }}" />
+                    <x-jet-input id="quantity" class="block mt-1 w-full" type="text" wire:model.defer="quantity" />
+                    @error('quantity') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-4">
-                    <x-jet-label for="title" value="{{ __('detail') }}" />
-                    <x-jet-input id="detail" class="block mt-1 w-full" type="text" wire:model.defer="detail" />
-                    @error('details') <span class="error">{{ $message }}</span> @enderror
-                </div>
-                <div class="mt-4">
-                    <x-jet-label for="title" value="{{ __('Price') }}" />
-                    <x-jet-input id="price" class="block mt-1 w-full" type="number" wire:model.defer="price" />
+                    <x-jet-label for="price" value="{{ __('Price') }}" />
+                    <x-jet-input id="price" class="block mt-1 w-full" type="text" wire:model.defer="price" />
                     @error('price') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-4">
-                    <x-jet-label for="title" value="{{ __('Sale Price') }}" />
-                    <x-jet-input id="price" class="block mt-1 w-full" type="number" wire:model.defer="sale_price" />
-                    @error('sale_price') <span class="error">{{ $message }}</span> @enderror
-                </div>
-                <div class="mt-4">
-                    <x-jet-label for="title" value="{{ __('quantity') }}" />
-                    <x-jet-input id="quantity" class="block mt-1 w-full" type="number" wire:model.defer="quantity" />
-                    @error('quantity') <span class="error">{{ $message }}</span> @enderror
-                </div>
-
-                <div class="mt-4">
                     <x-jet-label for="status" value="{{ __('Status') }}" />
                     <select wire:model="status" class="form-control">
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
+                        <option value="0">Active</option>
+                        <option value="1">Inactive</option>
                     </select>
                     @error('status') <span class="error">{{ $message }}</span> @enderror
-
-
-                <select wire:model="category_id" class="form-control">
-                    <option> Select Category </option>
-                    @php($categories= \App\Models\Category::all())
-                    @foreach ($categories as $category)
-                        <option value="{{$category->id}}">{{$category->title}}</option>
-                    @endforeach
-                </select>
-                @error('category_id')
-                <label class="text-danger">{{$message}}</label>
-                @enderror
-
+                </div>
                 <div class="mt-4">
                     <x-jet-label for="slug" value="{{ __('Slug') }}" />
                     <div class="mt-1 flex rounded-md shadow-sm">
@@ -189,12 +160,42 @@
                     @enderror
                 </div>
 
+                category
                 <div class="mt-4">
-                    <x-jet-label for="title" value="{{ __('Image') }}" />
-                    <x-jet-input id="image" class="block mt-1 w-full" type="file" wire:model.defer="image" />
-                    @error('image') <span class="error">{{ $message }}</span> @enderror
+                    <x-jet-label for="category_id" value="{{ __('Category') }}" />
+                    <select wire:model="category_id" class="form-control">
+                        <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->title }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id') <span class="error">{{ $message }}</span> @enderror
                 </div>
 
+
+{{--                image upload--}}
+                <form wire:submit.prevent="create">
+                                <div class="sm:col-span-6">
+                                    <label for="image" class="block text-sm font-medium text-gray-700"> Post Image </label>
+                                    @if ($oldImage)
+                                        Old Image::
+                                        <img src="{{ Storage::url($oldImage)  }} " class="w-40 h-40">
+                                    @endif
+                                    @if ($newImage)
+                                        Photo Preview:
+                                        <img src="{{ $newImage->temporaryUrl() }}" class="w-40 h-40">
+                                    @endif
+                                    <div class="mt-1">
+                                        <input type="file" id="image" wire:model="newImage" name="image"
+                                               class="block w-full appearance-none bg-white border border-gray-400 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                                        <div wire:loading wire:target="image">Uploading...</div>
+                                    </div>
+                                    @error('newImage')
+                                    <span class="text-red-400">{{ $message }}</span>
+                                    @enderror
+
+                                </div>
+                         </form>
 
 
             </x-slot>
