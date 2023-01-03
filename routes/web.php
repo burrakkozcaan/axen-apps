@@ -5,7 +5,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Admin\AdminCategoryComponent;
 use App\Http\Livewire\Admin\AdminProductComponent;
 use App\Http\Livewire\Admin\AdminDashboardComponent;
+use App\Http\Livewire\Admin\AdminUserComponent;
 use App\Http\Livewire\User\UserDashboardComponent;
+
 
 
 /*
@@ -38,6 +40,7 @@ Route::middleware(['auth:sanctum', 'verified','role:admin'])->group(function () 
     Route::get('/admin', AdminDashboardComponent::class)->name('admin.dashboard');
     Route::get('/admin/categories',AdminCategoryComponent::class)->name('admin.categories');
     Route::get('/admin/products',AdminProductComponent::class)->name('admin.products');
+    Route::get('/admin/users',AdminUserComponent::class)->name('admin.users');
 });
 
 

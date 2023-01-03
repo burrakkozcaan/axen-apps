@@ -96,6 +96,7 @@ class AdminProductComponent extends Component
 
         ]);
         $this->reset();
+        $this->resetFields();
 //        Product::create($this->modelId)->update($this->modelData());
 
         $this->modalFormVisible = false;
@@ -247,6 +248,7 @@ class AdminProductComponent extends Component
     {
         $this->resetValidation();
         $this->reset();
+        $this->resetFields();
         $this->modalFormVisible = true;
     }
 

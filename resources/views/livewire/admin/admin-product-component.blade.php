@@ -160,7 +160,7 @@
                     @enderror
                 </div>
 
-                category
+
                 <div class="mt-4">
                     <x-jet-label for="category_id" value="{{ __('Category') }}" />
                     <select wire:model="category_id" class="form-control">
@@ -176,7 +176,7 @@
 {{--                image upload--}}
                 <form wire:submit.prevent="create">
                                 <div class="sm:col-span-6">
-                                    <label for="image" class="block text-sm font-medium text-gray-700"> Post Image </label>
+                                    <label for="image" class="block text-sm font-medium text-gray-700">Image </label>
                                     @if ($oldImage)
                                         Old Image::
                                         <img src="{{ Storage::url($oldImage)  }} " class="w-40 h-40">
@@ -196,6 +196,7 @@
 
                                 </div>
                          </form>
+
 
 
             </x-slot>
