@@ -1,4 +1,7 @@
 # For more information: https://laravel.com/docs/sail
+# after editing Mysql add port 
+# curl -s "https://laravel.build/example-app" | bash
+# cd example-app. && ./vendor/bin/sail up 
 version: '3'
 services:
     laravel.test:
