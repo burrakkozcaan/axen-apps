@@ -55,7 +55,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [burrakkozcan@proton.me](mailto:burrakkozcan@proton.me). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Laravel, please send me e-mail to  [burrakkozcan@proton.me](mailto:burrakkozcan@proton.me). All security vulnerabilities will be promptly addressed.
 
 ## License
 
