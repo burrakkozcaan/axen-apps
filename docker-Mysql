@@ -1,0 +1,12 @@
+// compose edit add mysql host 
+  # phpmyadmin:
+    #     depends_on:
+    #         - mysql
+    #     image: phpmyadmin/phpmyadmin:latest
+    #     environment:
+    #         PMA_HOST: mysql
+    #         PMA_PORT: 3306
+    #     networks:
+    #         - sail
+    #     ports:
+    #         - 8001:80
