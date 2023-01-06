@@ -155,15 +155,15 @@ class AdminProductComponent extends Component
             $image = $this->newImage->store('public/products');
         }
 
-       $this->Product->update([
+        $this->Product->update([
             'title' => $this->title,
             'slug' => $this->slug,
             'content' => $this->content,
             'image' => $image,
             'quantity' => $this->quantity,
             'price' => $this->price,
-           'status' => $this->status,
-              'category_id' => $this->category_id,
+            'status' => $this->status,
+            'category_id' => $this->category_id,
 
 
         ]);
@@ -316,7 +316,7 @@ class AdminProductComponent extends Component
             'slug' => $this->slug,
             'content' => $this->content,
             'quantity' => $this->quantity,
-             'price' => $this->price,
+            'price' => $this->price,
             'status' => $this->status,
             'category_id' => $this->category_id,
         ];
@@ -343,7 +343,7 @@ class AdminProductComponent extends Component
             'products' => $this->read(),
 
         ];
-         $categories = Category::all();
+        $categories = Category::all();
 
 
         return view('livewire.admin.admin-product-component', $products, ['categories' => $categories] )->layout('layouts.admin');

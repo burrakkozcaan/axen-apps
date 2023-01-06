@@ -25,6 +25,7 @@
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Content</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">img</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">imgGallery</th>
                             <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
 
                         </tr>
@@ -44,7 +45,7 @@
                                         {{ $Product->quantity }}
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                        {{ $Product->price }}
+                                        ${{ $Product->price }}
                                     </td>
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
                                         <a
@@ -66,9 +67,18 @@
                                               Inactive
                                             </span>
                                         @endif
+                                    </td>
+
                                     <td class="px-6 py-4 text-sm whitespace-no-wrap">
                                         <img class="w-8 h-8 rounded-full" src="{{ Storage::url($Product->image) }}" />
                                     </td>
+
+
+{{--                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">--}}
+{{--                                        <a href="{{ route('admin.images', ['product_id' => $Product->image]) }}" class="text-indigo-600 hover:text-indigo-900" >--}}
+{{--                                            <img class="w-8 h-8 rounded-full" src="{{ asset('assets/gallery.png') }}"  />--}}
+{{--                                        </a>--}}
+{{--                                    </td>--}}
 
                                     <td class="px-6 py-4 text-right text-sm">
                                         <x-jet-button wire:click="updateShowModal({{ $Product->id }})">
@@ -175,29 +185,28 @@
 
 {{--                image upload--}}
                 <form wire:submit.prevent="create">
-                                <div class="sm:col-span-6">
-                                    <label for="image" class="block text-sm font-medium text-gray-700">Image </label>
-                                    @if ($oldImage)
-                                        Old Image::
-                                        <img src="{{ Storage::url($oldImage)  }} " class="w-40 h-40">
-                                    @endif
-                                    @if ($newImage)
-                                        Photo Preview:
-                                        <img src="{{ $newImage->temporaryUrl() }}" class="w-40 h-40">
-                                    @endif
-                                    <div class="mt-1">
-                                        <input type="file" id="image" wire:model="newImage" name="image"
-                                               class="block w-full appearance-none bg-white border border-gray-400 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
-                                        <div wire:loading wire:target="image">Uploading...</div>
-                                    </div>
-                                    @error('newImage')
-                                    <span class="text-red-400">{{ $message }}</span>
-                                    @enderror
+                    <div class="sm:col-span-6">
+                        <label for="image" class="block text-sm font-medium text-gray-700">Image </label>
+                        @if ($oldImage)
+                            Old Image::
+                            <img src="{{ Storage::url($oldImage)  }} " class="w-40 h-40">
+                        @endif
+                        @if ($newImage)
+                            Photo Preview:
+                            <img src="{{ $newImage->temporaryUrl() }}" class="w-40 h-40">
+                            {{--                                        <button wire:click="removeImage({{ $loop->admin}})" class="bg-red-500 text-white p-1 rounded">Remove</button>--}}
+                        @endif
+                        <div class="mt-1">
+                            <input type="file" id="image" wire:model="newImage" name="image"
+                                   class="block w-full appearance-none bg-white border border-gray-400 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                            <div wire:loading wire:target="image">Uploading...</div>
+                        </div>
+                        @error('newImage')
+                        <span class="text-red-400">{{ $message }}</span>
+                        @enderror
 
-                                </div>
-                         </form>
-
-
+                    </div>
+                </form>
 
             </x-slot>
 
