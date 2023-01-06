@@ -23,3 +23,10 @@ require_once __DIR__.'/jetstream.php'; //porfile route change
 # Add route jetstream.php 
 #config Vendor/laravel/jetstream/livewire.php copy all file and new folder inside the create file in route jetstream.php paste change
 #user/profile route change to /profile 
+#DataBaseSeeder.php add
+```php
+ $role_admin = Role::create(['name' => 'admin']);
+ 
+  $role_user = Role::create(['name' => 'user']);
+
+```
